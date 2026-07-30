@@ -1,0 +1,8 @@
+[
+  {"id":"d1","n1":1,"d1":2,"n2":1,"d2":5,"operation":"+","form":"bare"},
+  {"id":"d2","n1":2,"d1":3,"n2":1,"d2":5,"operation":"+","form":"bare"},
+  {"id":"d3","n1":1,"d1":4,"n2":2,"d2":7,"operation":"+","form":"bare"},
+  {"id":"d4","n1":3,"d1":8,"n2":1,"d2":6,"operation":"+","form":"bare"},
+  {"id":"d5","n1":2,"d1":5,"n2":3,"d2":10,"operation":"+","form":"visual"},
+  {"id":"d6","n1":1,"d1":3,"n2":2,"d2":9,"operation":"+","form":"word"}
+]

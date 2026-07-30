@@ -1,0 +1,17 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.25", nodesep="0.45", ranksep="0.7"];
+  node [shape=record, style="rounded,filled", fontname="Arial", color="#D8D0C3", fillcolor="#FFFDF8", fontcolor="#171717"];
+  edge [color="#6E6A63", arrowsize=0.7];
+  analyses [label="{analyses|id\lstatus\ltemplate_id\ldemo_mode\l}"];
+  students [label="{students|id\lanalysis_id\ldisplay_label\l}"];
+  items [label="{items|id\lanalysis_id\lproblem_json\lheld_out\l}"];
+  readings [label="{readings|student_id\litem_id\lcandidates_json\lselected_answer\l}"];
+  diagnoses [label="{diagnoses|student_id\lposterior_json\lconfidence_state\laction\l}"];
+  diagnostic [label="{diagnostic_items|diagnosis_id\lrank\lproblem_json\linformation_gain\l}"];
+  analyses -> students;
+  analyses -> items;
+  students -> readings;
+  items -> readings;
+  students -> diagnoses;
+  diagnoses -> diagnostic;
+}

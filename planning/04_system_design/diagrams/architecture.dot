@@ -1,0 +1,21 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="transparent", pad="0.3", nodesep="0.45", ranksep="0.7"];
+  node [shape=box, style="rounded,filled", fontname="Arial", color="#D8D0C3", fillcolor="#FFFDF8", fontcolor="#171717", margin="0.14,0.10"];
+  edge [color="#6E6A63", arrowsize=0.7, fontname="Arial", fontcolor="#6E6A63"];
+  user [label="Teacher / Judge", fillcolor="#F7F1E8"];
+  web [label="Next.js Web App\nUpload · Class Map · Judge Mode"];
+  api [label="FastAPI\nJobs · Schemas · Result API"];
+  vision [label="Featherless Vision\nStructured transcription", fillcolor="#E8F2EF"];
+  core [label="Faultline Core\nExecutable rules · Posterior", fillcolor="#FBE8E2", color="#E15B3D"];
+  info [label="Information Gain\nNext-best questions"];
+  synth [label="Featherless Proposal\nSafe DSL verifier", fillcolor="#E8F2EF"];
+  db [shape=cylinder, label="Postgres + Object Storage"];
+  result [label="Evidence + Action\nPrediction reveal"];
+  user -> web -> api;
+  api -> vision -> core;
+  core -> info -> result;
+  core -> synth [label="only if library fails"];
+  synth -> core [label="verified candidate"];
+  api -> db;
+  core -> result -> web;
+}

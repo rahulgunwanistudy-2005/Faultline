@@ -1,0 +1,22 @@
+digraph G {
+  graph [rankdir=TB, bgcolor="transparent", pad="0.25", nodesep="0.35", ranksep="0.45"];
+  node [shape=box, style="rounded,filled", fontname="Arial", color="#D8D0C3", fillcolor="#FFFDF8", fontcolor="#171717"];
+  edge [color="#6E6A63", arrowsize=0.7, fontname="Arial"];
+  a [label="OCR candidates + confidence"];
+  b [label="Execute every eligible procedure"];
+  c [label="Marginalize OCR uncertainty"];
+  d [label="Normalize posterior"];
+  e [shape=diamond, label="Confidence gate passes?", fillcolor="#F7F1E8"];
+  f [label="Show procedure + evidence", fillcolor="#E8F2EF"];
+  g [label="Rank diagnostic questions\nby exact information gain", fillcolor="#FFF4D8"];
+  h [shape=diamond, label="Known rule reproduces ≥70%?", fillcolor="#F7F1E8"];
+  i [label="Request restricted JSON proposal"];
+  j [label="Verify in safe interpreter\n+ complexity penalty"];
+  k [label="Keep as new-pattern candidate", fillcolor="#FBE8E2"];
+  a -> b -> c -> d -> e;
+  e -> f [label="yes"];
+  e -> g [label="no / ambiguous"];
+  d -> h;
+  h -> i [label="no"];
+  i -> j -> k;
+}

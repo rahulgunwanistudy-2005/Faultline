@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOTS = (ROOT / "apps", ROOT / "packages", ROOT / "scripts", ROOT / ".github")
 TEXT_SUFFIXES = {".py", ".js", ".html", ".css", ".sh", ".yaml", ".yml", ".json", ".toml"}
-SKIP_PARTS = {"__pycache__", ".pytest_cache", "node_modules", ".venv", "venv", "dist", "build"}
+SKIP_PARTS = {"__pycache__", ".pytest_cache", "node_modules", ".venv", "venv", "dist", "build", ".next"}
 
 CHECKS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (

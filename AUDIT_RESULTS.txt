@@ -1,0 +1,15 @@
+Faultline v0.2.0 — Audit Outcome
+================================
+
+Verdict: submission-ready as a hardened synthetic competition prototype; not production-ready for real student data.
+
+Issues corrected
+- 3 critical dependency/proof-integrity issues
+- 6 major API, upload, state, validation, and rate-limit issues
+- 6 medium architecture, deployment, UI, and claim-drift issues
+- 3 minor integrity/accessibility/release issues
+
+Most important correction
+The original browser/API fixture already contained the held-out answer and prediction. The corrected build removes both from public payloads and assets, creates the prediction on the server, signs it with an expiring HMAC token, and requires that token for a separate reveal.
+
+See PROJECT_QUALITY_AUDIT.md for the complete issue registry, verification cycles, and remaining human/research gates.

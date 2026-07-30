@@ -1,0 +1,34 @@
+Faultline v0.2.0 — Final Verification
+====================================
+
+Source census
+- 41 source files
+- 3,221 source lines
+- Python, JavaScript, HTML, CSS, and one future-state SQL schema
+
+Automated gates
+1. Python compilation: PASS
+2. Categorical source/security sweep: PASS across 44 runtime/config files
+3. JavaScript syntax: PASS (app.js, judge.js)
+4. Public generated-fixture integrity: PASS
+5. Core/API/data/static tests: 33 PASS
+6. Direct dependency pins and installed dependency closure: PASS
+7. Synthetic fixture evaluation regeneration: PASS
+8. Live HTTP and signed prediction/reveal smoke test: PASS
+9. JSON/YAML parse check: PASS
+
+Synthetic fixture results
+- Assigned procedure ranked first: 12/12
+- Named diagnosis after confidence gating: 11/12
+- Deliberate refusal: 1/12
+- Public class/browser held-out leakage: 0 fields
+- Tampered proof token: rejected
+- Cross-student proof token: rejected
+
+Environment limitations
+- Docker engine unavailable, so the image was statically reviewed but not built here.
+- ruff, mypy/pyright, bandit, pip-audit, and hadolint were unavailable.
+- The sandbox package mirror returned no distributions, so a fresh dependency download could not be performed. Exact preinstalled versions and their project dependency closure passed verification.
+- Localhost/file browser automation was blocked, so rendered Chrome/Safari QA remains a manual gate.
+
+These results are software regression evidence, not handwriting accuracy, classroom accuracy, or learning-impact evidence.

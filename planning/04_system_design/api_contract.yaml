@@ -1,0 +1,120 @@
+openapi: 3.1.0
+info:
+  title: Faultline API
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      responses:
+        '200':
+          description: Service health
+  /v1/demo/classes/{class_id}:
+    get:
+      parameters:
+        - in: path
+          name: class_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: Seeded demo class analysis
+  /v1/analyses:
+    post:
+      summary: Create a worksheet analysis
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, template_id]
+              properties:
+                file: {type: string, format: binary}
+                template_id: {type: string}
+      responses:
+        '202':
+          description: Analysis accepted
+  /v1/analyses/{analysis_id}:
+    get:
+      parameters:
+        - in: path
+          name: analysis_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: Job status and result when ready
+  /v1/analyses/{analysis_id}/readings/{reading_id}:
+    patch:
+      summary: Correct a low-confidence OCR reading
+      parameters:
+        - in: path
+          name: analysis_id
+          required: true
+          schema: {type: string}
+        - in: path
+          name: reading_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [normalized_answer]
+              properties:
+                normalized_answer: {type: string}
+                step_features:
+                  type: array
+                  items: {type: string}
+      responses:
+        '200': {description: Reading corrected and diagnosis refreshed}
+  /v1/students/{student_id}/diagnostic-items:
+    get:
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Top information-gain items}
+  /v1/students/{student_id}/held-out-prediction:
+    post:
+      summary: Predict a response without revealing held-out work
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FractionProblem'
+      responses:
+        '200': {description: Predicted response by hypothesis posterior}
+  /v1/students/{student_id}/held-out-reveal:
+    get:
+      summary: Reveal separately stored held-out crop
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Held-out evidence}
+components:
+  schemas:
+    FractionProblem:
+      type: object
+      required: [id, n1, d1, n2, d2, operation]
+      properties:
+        id: {type: string}
+        n1: {type: integer}
+        d1: {type: integer, minimum: 1}
+        n2: {type: integer}
+        d2: {type: integer, minimum: 1}
+        operation: {type: string, enum: ['+']}
+        form: {type: string, enum: [bare, word]}

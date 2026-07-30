@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: faultline
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: FAULTLINE_PROOF_SECRET
+        generateValue: true
+      - key: FEATHERLESS_API_KEY
+        sync: false

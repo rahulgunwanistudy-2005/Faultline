@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=75,<83"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "faultline-core"
+version = "0.2.0"
+description = "Deterministic executable-procedure inference for Faultline"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["faultline_core*"]

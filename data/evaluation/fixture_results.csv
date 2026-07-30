@@ -1,0 +1,13 @@
+student_id,assigned_procedure,top_hypothesis,top_match,gate_state,posterior,ocr_confidence_percent
+ari,correct_common_denominator,correct_common_denominator,True,named_diagnosis,0.8938,95
+bea,add_across,add_across,True,named_diagnosis,0.9997,96
+cleo,add_across,add_across,True,named_diagnosis,0.9997,95
+diego,keep_first_denominator,keep_first_denominator,True,named_diagnosis,0.9997,94
+eli,denominator_only_common,denominator_only_common,True,named_diagnosis,0.9997,96
+farah,multiply_all,multiply_all,True,named_diagnosis,0.9997,94
+gia,scale_first_only,scale_first_only,True,named_diagnosis,0.9997,96
+hugo,correct_common_denominator,correct_common_denominator,True,named_diagnosis,0.9997,94
+inez,add_across,add_across,True,named_diagnosis,0.9997,95
+jai,keep_first_denominator,keep_first_denominator,True,more_evidence_needed,0.9992,72
+kira,denominator_only_common,denominator_only_common,True,named_diagnosis,0.9997,95
+leo,multiply_all,multiply_all,True,named_diagnosis,0.9997,95

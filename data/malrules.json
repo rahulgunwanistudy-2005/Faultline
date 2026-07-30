@@ -1,0 +1,8 @@
+[
+  {"id":"correct_common_denominator","label":"Procedure is intact","action":"Confirm, then extend","provenance":"reference-correct"},
+  {"id":"add_across","label":"Adds straight across","action":"Re-explain the idea","provenance":"literature-grounded"},
+  {"id":"keep_first_denominator","label":"Keeps the first bottom number","action":"Re-explain the idea","provenance":"teacher-observed"},
+  {"id":"denominator_only_common","label":"Changes only the denominator","action":"Re-explain the idea","provenance":"teacher-observed"},
+  {"id":"multiply_all","label":"Multiplies instead of adding","action":"Re-anchor the operation","provenance":"literature-grounded"},
+  {"id":"scale_first_only","label":"Scales one fraction only","action":"Re-explain equivalence","provenance":"pilot-generated"}
+]

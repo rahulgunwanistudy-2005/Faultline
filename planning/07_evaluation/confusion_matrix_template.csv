@@ -1,0 +1,7 @@
+actual\predicted,correct_common_denominator,add_across,keep_first_denominator,denominator_only_common,multiply_all,scale_first_only,ambiguous
+correct_common_denominator,0,0,0,0,0,0,0
+add_across,0,0,0,0,0,0,0
+keep_first_denominator,0,0,0,0,0,0,0
+denominator_only_common,0,0,0,0,0,0,0
+multiply_all,0,0,0,0,0,0,0
+scale_first_only,0,0,0,0,0,0,0

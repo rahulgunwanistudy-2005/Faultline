@@ -3,69 +3,88 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Float, MeshTransmissionMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-function DataCrystal() {
-  const mesh = useRef<THREE.Mesh>(null);
-  
-  // Create a procedural fractured geometry
-  const geometry = useMemo(() => {
-    // Icosahedron for a crystal-like base shape
-    const geo = new THREE.IcosahedronGeometry(2.5, 1);
-    
-    // Add some random noise to the vertices for a "fractured" look
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-      const z = pos.getZ(i);
-      
-      const noise = (Math.random() - 0.5) * 0.4;
-      pos.setXYZ(i, x + x * noise, y + y * noise, z + z * noise);
-    }
-    
-    geo.computeVertexNormals();
-    return geo;
+function FaultLineCore() {
+  const group = useRef<THREE.Group>(null);
+  const topCrust = useRef<THREE.Mesh>(null);
+  const bottomCrust = useRef<THREE.Mesh>(null);
+  const core = useRef<THREE.Mesh>(null);
+
+  // Sharp, low-poly geometry for the outer crust
+  const crustGeo = useMemo(() => {
+    // Icosahedron with 0 detail produces sharp triangles
+    return new THREE.IcosahedronGeometry(1.6, 0);
   }, []);
 
   useFrame((state, delta) => {
-    if (!mesh.current) return;
+    if (!group.current || !topCrust.current || !bottomCrust.current || !core.current) return;
     
-    // Smooth, slow rotation
-    mesh.current.rotation.y += delta * 0.15;
-    mesh.current.rotation.x += delta * 0.05;
+    // Overall slow baseline rotation
+    group.current.rotation.y += delta * 0.1;
+    group.current.rotation.x += delta * 0.05;
+
+    // INTERACTION 1: 3D Mouse Tracking (Rotates the entire fault structure to face the cursor)
+    const targetX = (state.pointer.x * Math.PI) / 2;
+    const targetY = (state.pointer.y * Math.PI) / 2;
+    group.current.rotation.y += 0.05 * (targetX - group.current.rotation.y);
+    group.current.rotation.x += 0.05 * (targetY - group.current.rotation.x);
+
+    // INTERACTION 2: The "Fault Line" Fracture
+    // The further the mouse moves from the center of the screen, the more the crust splits open!
+    const mouseDistance = Math.sqrt(state.pointer.x * state.pointer.x + state.pointer.y * state.pointer.y);
+    const split = 0.1 + mouseDistance * 1.5; 
     
-    // React slightly to cursor
-    const targetX = (state.pointer.x * Math.PI) / 10;
-    const targetY = (state.pointer.y * Math.PI) / 10;
+    // Smoothly animate the crust pieces pulling apart diagonally
+    topCrust.current.position.y = THREE.MathUtils.lerp(topCrust.current.position.y, split, 0.1);
+    topCrust.current.position.x = THREE.MathUtils.lerp(topCrust.current.position.x, split * 0.5, 0.1);
     
-    mesh.current.rotation.y += 0.05 * (targetX - mesh.current.rotation.y);
-    mesh.current.rotation.x += 0.05 * (targetY - mesh.current.rotation.x);
+    bottomCrust.current.position.y = THREE.MathUtils.lerp(bottomCrust.current.position.y, -split, 0.1);
+    bottomCrust.current.position.x = THREE.MathUtils.lerp(bottomCrust.current.position.x, -split * 0.5, 0.1);
+    
+    // INTERACTION 3: The glowing core pulses and spins rapidly
+    const scale = 0.9 + Math.sin(state.clock.elapsedTime * 4) * 0.05;
+    core.current.scale.set(scale, scale, scale);
+    core.current.rotation.y -= delta * 0.5;
+    core.current.rotation.z += delta * 0.3;
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <mesh ref={mesh} geometry={geometry}>
-        <MeshTransmissionMaterial
-          backside
-          backsideThickness={1}
-          thickness={2.5}
-          ior={1.2}
-          chromaticAberration={0.4}
-          anisotropy={0.3}
-          distortion={0.5}
-          distortionScale={0.5}
-          temporalDistortion={0.1}
+    <group position={[2.8, 0, 0]} ref={group}>
+      
+      {/* Glowing Inner Core (Exposed when the fault line opens) */}
+      <mesh ref={core}>
+        <icosahedronGeometry args={[0.9, 1]} />
+        <meshBasicMaterial color="#F4A261" transparent opacity={0.9} />
+        {/* Wireframe overlay on the core for a data/tech vibe */}
+        <mesh>
+          <icosahedronGeometry args={[0.92, 1]} />
+          <meshBasicMaterial color="#FFFFFF" wireframe={true} transparent opacity={0.5} />
+        </mesh>
+      </mesh>
+      
+      {/* Top Crust (Distinct Orange) */}
+      <mesh ref={topCrust} geometry={crustGeo} rotation={[0, 0, 0.2]}>
+        <meshStandardMaterial
           color="#E07A5F"
-          emissive="#2A2421"
-          emissiveIntensity={0.1}
+          roughness={0.2}
+          metalness={0.4}
+          flatShading={true}
         />
       </mesh>
       
-      {/* Floating data particles around the crystal */}
+      {/* Bottom Crust (Distinct Orange, flipped) */}
+      <mesh ref={bottomCrust} geometry={crustGeo} rotation={[Math.PI, 0, -0.2]}>
+        <meshStandardMaterial
+          color="#E07A5F"
+          roughness={0.2}
+          metalness={0.4}
+          flatShading={true}
+        />
+      </mesh>
+      
       <DataParticles />
-    </Float>
+    </group>
   );
 }
 
@@ -79,15 +98,15 @@ function DataParticles() {
     
     const colorOptions = [
       new THREE.Color("#E07A5F"), // Burnt orange
-      new THREE.Color("#8C7868"), // Muted terracotta
       new THREE.Color("#F4A261"), // Amber
+      new THREE.Color("#FFFFFF"), // White sparks
     ];
     
     for (let i = 0; i < count; i++) {
-      // Position in a sphere around the crystal
+      // Position in a sphere around the fault
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
-      const radius = 3.5 + Math.random() * 3;
+      const radius = 2.5 + Math.random() * 2.5;
       
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
@@ -102,28 +121,31 @@ function DataParticles() {
     return [pos, col];
   }, []);
 
-  useFrame((state) => {
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    return geo;
+  }, [positions, colors]);
+
+  useFrame((state, delta) => {
     if (!particles.current) return;
-    particles.current.rotation.y = state.clock.elapsedTime * 0.05;
+    
+    // Base rotation
+    particles.current.rotation.y += delta * 0.05;
+    
+    // Interactive mouse follow for particles too
+    const targetX = (state.pointer.x * Math.PI) / 8;
+    particles.current.rotation.y += 0.05 * (targetX - particles.current.rotation.y);
   });
 
   return (
-    <points ref={particles}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          args={[colors, 3]}
-        />
-      </bufferGeometry>
+    <points ref={particles} geometry={geometry}>
       <pointsMaterial
-        size={0.08}
+        size={0.06}
         vertexColors
         transparent
-        opacity={0.6}
+        opacity={0.8}
         sizeAttenuation
       />
     </points>
@@ -132,22 +154,17 @@ function DataParticles() {
 
 export default function Scene() {
   return (
-    <div className="w-full h-[600px] lg:h-[800px] absolute right-0 top-0 -z-10 opacity-90">
+    <div className="w-full h-[600px] lg:h-[800px] absolute right-0 top-0 z-0 opacity-100 pointer-events-auto">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 45 }}
         dpr={[1, 2]}
       >
         <ambientLight intensity={1.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#FDFBF8" />
-        <pointLight position={[-10, -10, -10]} intensity={1} color="#E07A5F" />
+        {/* Bright directional lighting makes the flat-shaded geometry pop vibrantly */}
+        <directionalLight position={[10, 10, 10]} intensity={3} color="#FCFAF6" />
+        <directionalLight position={[-10, -10, -10]} intensity={1.5} color="#F4A261" />
         
-        <DataCrystal />
-        
-        {/* Soft environment lighting to enhance transmission material */}
-        <Environment preset="city" />
-        
-        {/* Disable orbit controls so it feels integrated, not like a 3D viewer widget */}
-        <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
+        <FaultLineCore />
       </Canvas>
     </div>
   );

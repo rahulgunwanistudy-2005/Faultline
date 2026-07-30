@@ -9,7 +9,7 @@ import Navigation from "@/components/Navigation";
 // Dynamically import the 3D Scene so it doesn't SSR and cause hydration errors
 const Scene = dynamic(() => import("@/components/Scene"), {
   ssr: false,
-  loading: () => <div className="absolute right-0 top-0 w-full h-[600px] lg:h-[800px] -z-10 animate-pulse bg-card" />
+  loading: () => <div className="absolute right-0 top-0 w-full h-[600px] lg:h-[800px] z-0 animate-pulse bg-card" />
 });
 
 export default function Home() {
@@ -28,9 +28,9 @@ export default function Home() {
       {/* The 3D Hero */}
       <Scene />
 
-      <main className="max-w-7xl mx-auto px-6 pt-32 lg:pt-48 pb-24">
+      <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 lg:pt-48 pb-24 pointer-events-none">
         {/* HERO SECTION */}
-        <section className="relative min-h-[60vh] flex flex-col justify-center">
+        <section className="relative min-h-[60vh] flex flex-col justify-center pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

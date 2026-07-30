@@ -25,18 +25,7 @@
   --card-hover: #F7F3ED; 
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1C1917;
-    --foreground: #E7E5E4;
-    --muted: #A8A29E;
-    --accent: #F4A261;
-    --accent-hover: #E76F51;
-    --border: rgba(231, 229, 228, 0.1);
-    --card: #292524;
-    --card-hover: #44403C;
-  }
-}
+
 
 html {
   scroll-behavior: smooth;

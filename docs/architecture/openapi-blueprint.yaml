@@ -1,0 +1,153 @@
+openapi: 3.1.0
+info:
+  title: Faultline API
+  version: 0.2.0
+  description: Public synthetic competition demo. Live handwriting transcription is disabled.
+paths:
+  /health:
+    get:
+      responses:
+        '200': {description: Service health}
+  /v1/demo/classes/{class_id}:
+    get:
+      parameters:
+        - in: path
+          name: class_id
+          required: true
+          schema: {type: string, enum: [period-3]}
+      responses:
+        '200': {description: Sanitized synthetic class analysis}
+        '404': {description: Demo class not found}
+  /v1/analyses:
+    post:
+      summary: Validate and segment a fixed-template worksheet image
+      description: Send the PNG/JPEG bytes as the request body. The image is not persisted. The returned analysis uses the disclosed synthetic fixture because live OCR is disabled.
+      parameters:
+        - in: query
+          name: template_id
+          required: true
+          schema: {type: string, enum: [fractions-v1]}
+        - in: header
+          name: X-Filename
+          required: false
+          schema: {type: string, maxLength: 120}
+      requestBody:
+        required: true
+        content:
+          image/png:
+            schema: {type: string, format: binary}
+          image/jpeg:
+            schema: {type: string, format: binary}
+      responses:
+        '202': {description: Bounded in-memory analysis accepted}
+        '413': {description: Image exceeds configured byte limit}
+        '415': {description: Content type is not PNG or JPEG}
+        '422': {description: Body is empty, unsafe, unreadable, or too small}
+        '429': {description: Rate limit exceeded}
+  /v1/analyses/{analysis_id}:
+    get:
+      parameters:
+        - in: path
+          name: analysis_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200': {description: Job status and disclosed synthetic result when complete}
+        '404': {description: Job not found or expired}
+  /v1/analyses/{analysis_id}/readings/{reading_id}:
+    patch:
+      summary: Correct a visible reading and recompute the synthetic diagnosis
+      parameters:
+        - in: path
+          name: analysis_id
+          required: true
+          schema: {type: string, format: uuid}
+        - in: path
+          name: reading_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadingCorrection'
+      responses:
+        '200': {description: Reading corrected and result recomputed}
+        '404': {description: Analysis or reading not found}
+        '422': {description: Invalid fraction or step feature}
+        '429': {description: Rate limit exceeded}
+  /v1/students/{student_id}/diagnostic-items:
+    get:
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Top exact-information-gain items}
+        '404': {description: Student not found}
+  /v1/students/{student_id}/held-out-prediction:
+    post:
+      summary: Lock the canonical demo prediction before reveal
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Prediction and expiring signed proof token, or an explicit withheld state}
+        '404': {description: Student not found}
+        '429': {description: Rate limit exceeded}
+  /v1/students/{student_id}/held-out-reveal:
+    post:
+      summary: Reveal the separately server-held demo answer using its prediction token
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [proof_token]
+              properties:
+                proof_token: {type: string, minLength: 40, maxLength: 4096}
+      responses:
+        '200': {description: Predicted and actual answers plus match status}
+        '404': {description: Student not found}
+        '409': {description: Malformed, expired, tampered, or cross-student token}
+        '422': {description: Invalid JSON schema}
+        '429': {description: Rate limit exceeded}
+components:
+  schemas:
+    ReadingCorrection:
+      type: object
+      additionalProperties: false
+      required: [normalized_answer]
+      properties:
+        normalized_answer:
+          type: string
+          description: Integer or fraction such as 2/5
+          minLength: 1
+          maxLength: 64
+        step_features:
+          type: array
+          maxItems: 12
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - common_denominator
+              - both_numerators_scaled
+              - numerators_added
+              - denominators_added
+              - first_denominator_kept
+              - numerators_unscaled
+              - numerators_multiplied
+              - denominators_multiplied
+              - first_numerator_scaled_only

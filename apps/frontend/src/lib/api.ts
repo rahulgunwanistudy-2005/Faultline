@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create a configured Axios instance pointing to the FastAPI backend
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +18,7 @@ export type HealthStatus = {
 };
 
 export type Student = {
-  id: string;
+  student_id: string;
   name?: string;
   diagnostic_items?: any[];
 };

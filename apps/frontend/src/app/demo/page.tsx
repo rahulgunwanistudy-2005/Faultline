@@ -119,7 +119,7 @@ export default function DemoDashboard() {
               ) : students.length > 0 ? (
                 students.map((student) => (
                   <button
-                    key={student.id}
+                    key={student.student_id}
                     onClick={() => {
                       setSelectedStudent(student);
                       setPredictionResult(null);
@@ -127,11 +127,11 @@ export default function DemoDashboard() {
                       setRevealResult(null);
                     }}
                     className={`w-full text-left px-5 py-4 rounded-xl transition-colors ${
-                      selectedStudent?.id === student.id ? "bg-accent/10 border-accent/20 border" : "hover:bg-card-hover border border-transparent"
+                      selectedStudent?.student_id === student.student_id ? "bg-accent/10 border-accent/20 border" : "hover:bg-card-hover border border-transparent"
                     }`}
                   >
-                    <div className="font-medium text-foreground">{student.name || `Student ${student.id}`}</div>
-                    <div className="text-xs text-muted mt-1 font-mono">{student.id}</div>
+                    <div className="font-medium text-foreground">{student.name || `Student ${student.student_id}`}</div>
+                    <div className="text-xs text-muted mt-1 font-mono">{student.student_id}</div>
                   </button>
                 ))
               ) : (
@@ -158,8 +158,8 @@ export default function DemoDashboard() {
               >
                 <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h2 className="font-display text-3xl font-bold mb-2">{selectedStudent.name || `Student ${selectedStudent.id}`}</h2>
-                    <p className="text-muted font-mono text-sm">{selectedStudent.id}</p>
+                    <h2 className="font-display text-3xl font-bold mb-2">{selectedStudent.name || `Student ${selectedStudent.student_id}`}</h2>
+                    <p className="text-muted font-mono text-sm">{selectedStudent.student_id}</p>
                   </div>
                 </div>
 
@@ -172,7 +172,7 @@ export default function DemoDashboard() {
                     <div className="space-y-4">
                       <p className="text-muted text-sm">Lock the prediction to receive a cryptographic proof token based on visible work.</p>
                       <button 
-                        onClick={() => handlePredict(selectedStudent.id)}
+                        onClick={() => handlePredict(selectedStudent.student_id)}
                         className="px-6 py-2.5 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors shadow-sm"
                       >
                         Lock Prediction
@@ -185,7 +185,7 @@ export default function DemoDashboard() {
                       </div>
                       <p className="text-muted text-sm">Submit the token to securely verify and reveal the separately stored answer.</p>
                       <button 
-                        onClick={() => handleReveal(selectedStudent.id)}
+                        onClick={() => handleReveal(selectedStudent.student_id)}
                         className="px-6 py-2.5 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-colors shadow-sm flex items-center gap-2"
                       >
                         <Unlock size={18} /> Reveal Answer

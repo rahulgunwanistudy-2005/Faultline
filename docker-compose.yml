@@ -1,0 +1,14 @@
+services:
+  faultline:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      FAULTLINE_PROOF_SECRET: ${FAULTLINE_PROOF_SECRET:?Set FAULTLINE_PROOF_SECRET before starting Compose}
+      FEATHERLESS_API_KEY: ${FEATHERLESS_API_KEY:-}
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true

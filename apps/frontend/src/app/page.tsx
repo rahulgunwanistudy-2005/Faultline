@@ -53,9 +53,12 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Link href="/judge" className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-accent text-white font-medium flex items-center justify-center gap-2 hover:bg-accent-hover transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 duration-300">
-                Play Presentation
-                <ArrowRight size={18} />
+              <Link
+                href="/judge"
+                className="group w-full sm:w-auto px-8 py-3.5 rounded-lg bg-accent text-white font-medium flex items-center justify-center gap-2 hover:bg-accent-hover transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 duration-300"
+              >
+                Judge Mode
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link href="/demo" className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-card text-foreground font-medium border border-border flex items-center justify-center gap-2 hover:bg-card-hover transition-colors shadow-sm">
                 Interactive Dashboard

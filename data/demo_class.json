@@ -1,0 +1,741 @@
+{
+  "dataset_type": "synthetic deterministic demo fixture",
+  "skill": "adding fractions with unlike denominators",
+  "problems": [
+    {
+      "id": "p1",
+      "n1": 1,
+      "d1": 2,
+      "n2": 1,
+      "d2": 3,
+      "operation": "+",
+      "form": "bare"
+    },
+    {
+      "id": "p2",
+      "n1": 2,
+      "d1": 3,
+      "n2": 1,
+      "d2": 4,
+      "operation": "+",
+      "form": "bare"
+    },
+    {
+      "id": "p3",
+      "n1": 3,
+      "d1": 5,
+      "n2": 1,
+      "d2": 2,
+      "operation": "+",
+      "form": "bare"
+    },
+    {
+      "id": "p4",
+      "n1": 1,
+      "d1": 4,
+      "n2": 2,
+      "d2": 3,
+      "operation": "+",
+      "form": "word"
+    },
+    {
+      "id": "p5",
+      "n1": 2,
+      "d1": 5,
+      "n2": 1,
+      "d2": 3,
+      "operation": "+",
+      "form": "word"
+    },
+    {
+      "id": "p6",
+      "n1": 3,
+      "d1": 8,
+      "n2": 1,
+      "d2": 6,
+      "operation": "+",
+      "form": "bare"
+    },
+    {
+      "id": "p7",
+      "n1": 1,
+      "d1": 6,
+      "n2": 3,
+      "d2": 4,
+      "operation": "+",
+      "form": "bare"
+    },
+    {
+      "id": "heldout",
+      "n1": 2,
+      "d1": 7,
+      "n2": 1,
+      "d2": 3,
+      "operation": "+",
+      "form": "bare",
+      "held_out": true
+    }
+  ],
+  "students": [
+    {
+      "student_id": "ari",
+      "display_name": "Ari",
+      "assigned_procedure": "correct_common_denominator",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "5/6",
+          "ocr_confidence": 0.91,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "11/12",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "11/10",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/7",
+          "ocr_confidence": 0.93,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/8",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "13/24",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "11/12",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "13/21",
+          "ocr_confidence": 0.99,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "bea",
+      "display_name": "Bea",
+      "assigned_procedure": "add_across",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "2/5",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "3/7",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "4/7",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/7",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/8",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "2/7",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "2/5",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "3/10",
+          "ocr_confidence": 0.98,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "cleo",
+      "display_name": "Cleo",
+      "assigned_procedure": "add_across",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "2/5",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "3/7",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "4/7",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/7",
+          "ocr_confidence": 0.91,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/8",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "2/7",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "2/5",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "3/10",
+          "ocr_confidence": 0.91,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "diego",
+      "display_name": "Diego",
+      "assigned_procedure": "keep_first_denominator",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/1",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/1",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "4/5",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/4",
+          "ocr_confidence": 0.91,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/5",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/2",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "2/3",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "3/7",
+          "ocr_confidence": 0.94,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "eli",
+      "display_name": "Eli",
+      "assigned_procedure": "denominator_only_common",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/3",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/4",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "2/5",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "1/4",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "1/5",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/6",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "1/3",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "1/7",
+          "ocr_confidence": 0.97,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "farah",
+      "display_name": "Farah",
+      "assigned_procedure": "multiply_all",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/6",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/6",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "3/10",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "1/6",
+          "ocr_confidence": 0.93,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "2/15",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/16",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "1/8",
+          "ocr_confidence": 0.93,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "2/21",
+          "ocr_confidence": 0.93,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "gia",
+      "display_name": "Gia",
+      "assigned_procedure": "scale_first_only",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "2/3",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "3/4",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "7/10",
+          "ocr_confidence": 0.99,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "5/12",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "7/15",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "5/12",
+          "ocr_confidence": 0.91,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "5/12",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "1/3",
+          "ocr_confidence": 0.92,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "hugo",
+      "display_name": "Hugo",
+      "assigned_procedure": "correct_common_denominator",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "5/6",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "11/12",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "11/10",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "11/12",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "11/15",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "13/24",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "11/12",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "13/21",
+          "ocr_confidence": 0.95,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "inez",
+      "display_name": "Inez",
+      "assigned_procedure": "add_across",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "2/5",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "3/7",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "4/7",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/7",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/8",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "2/7",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "2/5",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "3/10",
+          "ocr_confidence": 0.95,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "jai",
+      "display_name": "Jai",
+      "assigned_procedure": "keep_first_denominator",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/1",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/1",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "4/5",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "3/4",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "3/5",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/2",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "2/3",
+          "ocr_confidence": 0.72,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "3/7",
+          "ocr_confidence": 0.97,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "kira",
+      "display_name": "Kira",
+      "assigned_procedure": "denominator_only_common",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/3",
+          "ocr_confidence": 0.97,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/4",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "2/5",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "1/4",
+          "ocr_confidence": 0.96,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "1/5",
+          "ocr_confidence": 0.94,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/6",
+          "ocr_confidence": 0.93,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "1/3",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "1/7",
+          "ocr_confidence": 0.93,
+          "held_out": true
+        }
+      ]
+    },
+    {
+      "student_id": "leo",
+      "display_name": "Leo",
+      "assigned_procedure": "multiply_all",
+      "observations": [
+        {
+          "problem_id": "p1",
+          "answer": "1/6",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p2",
+          "answer": "1/6",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p3",
+          "answer": "3/10",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p4",
+          "answer": "1/6",
+          "ocr_confidence": 0.98,
+          "held_out": false
+        },
+        {
+          "problem_id": "p5",
+          "answer": "2/15",
+          "ocr_confidence": 0.92,
+          "held_out": false
+        },
+        {
+          "problem_id": "p6",
+          "answer": "1/16",
+          "ocr_confidence": 0.95,
+          "held_out": false
+        },
+        {
+          "problem_id": "p7",
+          "answer": "1/8",
+          "ocr_confidence": 0.93,
+          "held_out": false
+        },
+        {
+          "problem_id": "heldout",
+          "answer": "2/21",
+          "ocr_confidence": 0.95,
+          "held_out": true
+        }
+      ]
+    }
+  ]
+}

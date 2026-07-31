@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "release": "0.2.0",
-  "file_count": 180,
+  "file_count": 184,
   "files": [
     {
       "path": ".env.example",
@@ -55,8 +55,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 7867,
-      "sha256": "f80648cbd5a489a48048d3dca059943460c555926c820c340d5a0b11dbd3fec7"
+      "bytes": 14138,
+      "sha256": "d90dabf07244da4f87c2ded38fb82de14c9ee6338c94782db12c210e71e6e4b5"
     },
     {
       "path": "SECURITY.md",
@@ -179,6 +179,16 @@
       "sha256": "207e265ff4901f9ad9f96d8ce08530e04f9fc600815472a66d0a446096d654cd"
     },
     {
+      "path": "apps/frontend/.vercel/README.txt",
+      "bytes": 520,
+      "sha256": "f5d1ed0f5032ae128931f46459b5faa1af6319fc2dfb3e7a5fe54a84bf93dbd6"
+    },
+    {
+      "path": "apps/frontend/.vercel/project.json",
+      "bytes": 113,
+      "sha256": "99698bd3bde56f4b5a810e3308186f45bb27ed0c7a65ed321f5103d27fe46318"
+    },
+    {
       "path": "apps/frontend/AGENTS.md",
       "bytes": 327,
       "sha256": "e3447d84251880fb34cfae09131cb4c57471529bbfe60976a3245793cf621627"
@@ -205,8 +215,8 @@
     },
     {
       "path": "apps/frontend/next.config.ts",
-      "bytes": 133,
-      "sha256": "614bce25b089c3f19b1e17a6346c74b858034040154c6621e7d35303004767cc"
+      "bytes": 350,
+      "sha256": "5a0c7c82cf1cedd088698e5ffdc3dff3deb38f048a55ce09b484a2b822c83644"
     },
     {
       "path": "apps/frontend/package-lock.json",
@@ -250,8 +260,8 @@
     },
     {
       "path": "apps/frontend/src/app/demo/page.tsx",
-      "bytes": 10631,
-      "sha256": "b9a412a5318138a33114998acf1b06ce63d9d486ea9966abfad38187eb39abe5"
+      "bytes": 10703,
+      "sha256": "3b7db7d0fce6e34ab9e0c3f100a93a3a0633ff219ced9b1a08e02db67c4b29cf"
     },
     {
       "path": "apps/frontend/src/app/favicon.ico",
@@ -260,23 +270,23 @@
     },
     {
       "path": "apps/frontend/src/app/globals.css",
-      "bytes": 1130,
-      "sha256": "632fdf9c742418044fafe1571dcb52a8eaeaf8ba1b918cf737dbd7b8cbf588ff"
+      "bytes": 861,
+      "sha256": "ff8dc1e3f5116b364d26384bf98683c722e3025b204e4100c82c57192a7ff5fa"
     },
     {
       "path": "apps/frontend/src/app/judge/page.tsx",
-      "bytes": 5122,
-      "sha256": "083b7b1682790b3d4f677cbeab8c2d4d7184944af5f40f9a510f78844886a333"
+      "bytes": 11296,
+      "sha256": "61f0ae1b77ee12cc72683602d0596d7c1f6c6f1337d4d7f93b8b2053e0f3f9e0"
     },
     {
       "path": "apps/frontend/src/app/layout.tsx",
-      "bytes": 899,
-      "sha256": "1aac92896c56abf5559a1fdbe97b6a87a92cf4ec8ee9ff67b86c101345db6ab7"
+      "bytes": 929,
+      "sha256": "bd0130b1b308dcdde3fcc8f6c7b067f8354361ee962603b2efe26b1b9d65f9f4"
     },
     {
       "path": "apps/frontend/src/app/page.tsx",
-      "bytes": 9503,
-      "sha256": "560eeb0d9aa5763b242a2e4c2d3196b23f801edd8f7d8d6cfec12e9d4e4cacb0"
+      "bytes": 9660,
+      "sha256": "7206694ab2c159c8ec240596313b1b4f27cee38666b1ec099e187d1bbc5f73cd"
     },
     {
       "path": "apps/frontend/src/components/Navigation.tsx",
@@ -285,18 +295,23 @@
     },
     {
       "path": "apps/frontend/src/components/Scene.tsx",
-      "bytes": 4673,
-      "sha256": "5b9b8dc3e4f5c396aff25544b343ae2330b3703e39f4dfbf1ad850917eafb17d"
+      "bytes": 5951,
+      "sha256": "a0528073e782ff87cd02cf9709be426c2950e835860524780ea01232b7c2194c"
     },
     {
       "path": "apps/frontend/src/lib/api.ts",
-      "bytes": 2900,
-      "sha256": "41a464000eb03f3f441eb249a173692068f277093839025b72fe37d1d8d6da3c"
+      "bytes": 2887,
+      "sha256": "44d543ec39271591273ca7a5cb2c2bcdcc4f6e7eea6b45df583f653ef3d4468d"
     },
     {
       "path": "apps/frontend/tsconfig.json",
       "bytes": 670,
       "sha256": "5c51df4c59f4510d8c7dadf07a5c32132228826a3b331da5e286207b4df7ef9c"
+    },
+    {
+      "path": "apps/frontend/tsconfig.tsbuildinfo",
+      "bytes": 194045,
+      "sha256": "b218813bc83af27e4249d48dc1b9a20e34ea3eade9bbd9d3d7fd5a0602e2fbac"
     },
     {
       "path": "apps/web-static/assets/app.js",
@@ -462,6 +477,11 @@
       "path": "packages/faultline_core/faultline_core/malrules.py",
       "bytes": 3568,
       "sha256": "1b493654be0f76e57a6e7df3141b28a33241f9aaf407ff718dfe204c3013c783"
+    },
+    {
+      "path": "packages/faultline_core/faultline_core/ml_engine.py",
+      "bytes": 3877,
+      "sha256": "4e4be1694e60962cbd85cfdfe63109290d86371e111920e3db49af14a0533dd9"
     },
     {
       "path": "packages/faultline_core/faultline_core/synthesis.py",

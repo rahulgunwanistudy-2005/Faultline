@@ -42,31 +42,31 @@ When a student consistently writes `1/2 + 1/3 = 2/5` — adding the denominators
 
 Most EdTech today wraps a generative LLM around a math problem and hopes it doesn't hallucinate. FaultLine takes the opposite approach: a **Neuro-Symbolic Architecture** where Machine Learning and deterministic arithmetic cover each other's weaknesses.
 
-```
-                     ┌─────────────────────────────────────────────┐
-  Student Answer  ──▶│  LLM / Sequence Model (Neuro Layer)         │
-  "1/2 + 1/3 = 2/5"  │  Predicts: add_denominators (85%)           │
-                     │            cross_multiply (10%)              │
-                     │            forget_reduce (5%)                │
-                     └──────────────────┬──────────────────────────┘
-                                        │ Pruned candidates (3 vs. 50+)
-                                        ▼
-                     ┌─────────────────────────────────────────────┐
-                     │  Deterministic Arithmetic Engine (Sym. Layer)│
-                     │  Executes each candidate procedure           │
-                     │  with exact rational arithmetic              │
-                     │  Proves the bug mathematically               │
-                     └──────────────────┬──────────────────────────┘
-                                        │
-                        ┌───────────────┴───────────────┐
-                        ▼                               ▼
-              Named Diagnosis ✅              Ambiguous → Bayesian Update
-              "add_denominators"              P(H|E) = P(E|H)·P(H)/P(E)
-              Posterior: 0.91                Selects next question via
-                                             Max Expected Info Gain
-```
-
 > **Key distinction:** The LLM never names a diagnosis. It strictly acts as a heuristic to shrink the search space. The **deterministic engine** makes the final call. Zero hallucinations by design.
+
+### Neuro-Symbolic Pipeline
+
+```mermaid
+flowchart LR
+    A["🧑‍🎓 Student Answer\n1/2 + 1/3 = 2/5"] --> B
+
+    subgraph Neuro["⚡ Neuro Layer  —  LLM / Sequence Model"]
+        B["Predict likely bugs\nfrom error history"]
+        B --> C["Top-K candidates\nadd_denominators 85%\ncross_multiply 10%\nforget_reduce 5%"]
+    end
+
+    subgraph Symbolic["🔢 Symbolic Layer  —  Deterministic Arithmetic Engine"]
+        C --> D["Execute each candidate\nwith exact rational math"]
+        D --> E{"Match\nfound?"}
+        E -->|Yes| F["✅ Named Diagnosis\nadd_denominators\nPosterior: 0.91"]
+        E -->|No| G["Bayesian Updater\nP(H|E) = P(E|H)·P(H)/P(E)"]
+        G --> H["Max Expected\nInformation Gain\nH = -Σ P·log₂P"]
+        H --> I["🎯 Adaptive Question\nSelected for student"]
+        I --> D
+    end
+
+    F --> J["👩‍🏫 Teacher Dashboard\nImmediate action item"]
+```
 
 ---
 
@@ -80,7 +80,7 @@ When evidence is ambiguous, the system computes a posterior probability distribu
 
 ```
 H(X) = -Σ P(x) · log₂(P(x))     ← Current uncertainty
-EIG  = H_current - E[H_posterior] ← Expected reduction
+EIG  = H_current - E[H_posterior] ← Expected reduction per question
 ```
 
 The student answers one targeted question. The bug is isolated. No 20-question quiz required.
@@ -89,7 +89,7 @@ The student answers one targeted question. The bug is isolated. No 20-question q
 If evidence doesn't reach a confidence threshold, FaultLine **refuses to name a diagnosis**. It explicitly withholds its answer and issues a follow-up question instead. In our fixture: 11/12 named, 1/12 deliberately withheld.
 
 ### 4. Held-Out Prediction Proof (Tamper-Proof Fairness)
-FaultLine locks a prediction **before** the student's answer is revealed, returns a signed cryptographic proof token, and only reveals the stored answer when that exact token is submitted. Cross-student token reuse is blocked by integration tests.
+FaultLine locks a prediction **before** the student's answer is revealed, returns a signed cryptographic proof token, and only reveals the stored answer when that exact token is submitted.
 
 ---
 
@@ -97,96 +97,144 @@ FaultLine locks a prediction **before** the student's answer is revealed, return
 
 ### Full Stack Overview
 
+```mermaid
+graph TB
+    subgraph Client["🌐 Client Layer — Vercel CDN"]
+        FE["Next.js 16 Frontend\nThree.js 3D Hero · Framer Motion\nfrontend-seven-mu-58.vercel.app"]
+    end
+
+    subgraph API["⚙️ API Layer"]
+        FP["FastAPI · Uvicorn ASGI\nPort 8000"]
+        MW["RequestSafetyMiddleware\nCORS · Rate Limiter"]
+    end
+
+    subgraph Core["🧠 Core Intelligence"]
+        INF["inference.py\nDeterministic Procedure Engine"]
+        ML["ml_engine.py\nNeuro-Symbolic Heuristic\nBayesian Active Learner"]
+        IG["information_gain.py\nShannon Entropy · EIG"]
+        MAL["malrules.py\nProcedural Bug DSL"]
+        SYN["synthesis.py\nQuestion Generator"]
+    end
+
+    subgraph Data["💾 Data Layer"]
+        STORE["In-Memory Job Store"]
+        DATA["data/demo_class.json\n12-Student Fixture"]
+    end
+
+    subgraph External["🤖 External"]
+        LLM["LLM / Vision Model\nHandwriting Parser\n(boundary interface)"]
+    end
+
+    FE -->|"REST JSON"| MW
+    MW --> FP
+    FP --> INF
+    FP --> STORE
+    STORE --> DATA
+    INF --> ML
+    INF --> MAL
+    ML --> IG
+    ML --> SYN
+    FE -->|"Upload PNG/JPEG"| FP
+    FP --> LLM
+    LLM -->|"Structured expressions"| INF
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                        CLIENT LAYER                              │
-│  Next.js 16 · Three.js 3D Hero · Framer Motion · Vercel CDN     │
-│  frontend-seven-mu-58.vercel.app                                 │
-└──────────────────────────────┬───────────────────────────────────┘
-                               │ REST API (JSON)
-                               ▼
-┌──────────────────────────────────────────────────────────────────┐
-│                         API LAYER                                │
-│  FastAPI · Uvicorn ASGI · Python 3.11                            │
-│  RequestSafetyMiddleware · CORS · Rate Limiter (sliding window)  │
-│  Port 8000                                                       │
-└──────────────────────────────┬───────────────────────────────────┘
-                               │
-              ┌────────────────┴─────────────────┐
-              ▼                                  ▼
-┌─────────────────────────┐         ┌────────────────────────────┐
-│   CORE INTELLIGENCE     │         │      DATA LAYER            │
-│  packages/faultline_core│         │  data/demo_class.json      │
-│                         │         │  In-Memory Job Store       │
-│  inference.py           │         │  Signed Proof Tokens       │
-│  ml_engine.py           │◀────────│                            │
-│  information_gain.py    │         └────────────────────────────┘
-│  malrules.py (DSL)      │
-│  synthesis.py           │
-└─────────────────────────┘
-```
+
+---
 
 ### Request Flow — Worksheet Analysis
 
+```mermaid
+sequenceDiagram
+    participant T as 👩‍🏫 Teacher
+    participant FE as Next.js Frontend
+    participant API as FastAPI
+    participant SEG as segmentation.py
+    participant LLM as LLM Parser
+    participant ML as ml_engine.py
+    participant INF as inference.py
+    participant IG as information_gain.py
+
+    T->>FE: Upload worksheet image
+    FE->>API: POST /v1/analyses
+    API->>SEG: normalize + crop (8 regions)
+    SEG-->>API: Cropped student work
+    API->>LLM: Parse handwriting
+    LLM-->>API: Structured expressions
+    API->>ML: predict_likely_bugs()
+    Note over ML: LLM prunes 50 bugs → top 3
+    ML-->>INF: Ranked candidates
+    INF->>INF: Execute each deterministically
+    alt Match found
+        INF-->>API: Named diagnosis + posterior
+    else Ambiguous
+        INF->>IG: compute EIG
+        IG-->>INF: Best next question
+        INF-->>API: Follow-up question
+    end
+    API-->>FE: Diagnosis + actions
+    FE-->>T: Dashboard view
 ```
-Teacher uploads image
-       │
-       ▼
-FastAPI: POST /v1/analyses
-       │
-       ├─▶ segmentation.py: normalize + crop (8 regions)
-       │         │
-       │         ▼
-       │   LLM/OCR: handwriting → structured expressions
-       │         │
-       │         ▼
-       ├─▶ ml_engine.py: predict_likely_bugs()
-       │   [LLM prunes: 50 possible bugs → top 3 candidates]
-       │         │
-       │         ▼
-       ├─▶ inference.py: execute each candidate (deterministic)
-       │         │
-       │         ├── Match found → Named diagnosis + posterior
-       │         │
-       │         └── Ambiguous → information_gain.py
-       │                         Selects next targeted question
-       │
-       ▼
-Teacher Dashboard: Visual diagnosis + action items
+
+---
+
+### Held-Out Prediction Proof
+
+```mermaid
+sequenceDiagram
+    participant J as 🧑‍⚖️ Judge
+    participant API as FastAPI
+    participant HOL as held_out.py
+
+    J->>API: POST /v1/students/:id/held-out-prediction
+    API->>HOL: create_prediction(student_id)
+    Note over HOL: Prediction locked BEFORE answer revealed.<br/>Cryptographic proof_token generated.
+    HOL-->>API: {hypothesis, confidence, proof_token}
+    API-->>J: Return prediction + token
+    Note over J: Judge verifies student's actual answer independently
+    J->>API: POST /v1/students/:id/held-out-reveal {proof_token}
+    API->>HOL: reveal_prediction(student_id, token)
+    Note over HOL: Signature + student + age verified.<br/>Cross-student reuse rejected.
+    HOL-->>API: {prediction_was, actual_was, match}
+    API-->>J: ✅ Proof verified — no retroactive fitting
 ```
 
 ---
 
 ## 🏗️ Repository Structure
 
-```
-Faultline/
-├── apps/
-│   ├── frontend/              # Next.js 16 (Vercel)
-│   │   └── src/app/
-│   │       ├── page.tsx       # Landing + 3D FaultLine Hero
-│   │       ├── demo/          # Teacher Dashboard
-│   │       └── judge/         # 40s Cinematic Pitch Mode
-│   ├── api/                   # FastAPI + Uvicorn
-│   │   └── faultline_api/
-│   │       ├── routes/api.py  # All REST endpoints
-│   │       └── services/      # demo, held_out, jobs
-│   └── web-static/            # Hardened static build
-│
-├── packages/
-│   └── faultline_core/        # Zero-dependency inference engine
-│       ├── inference.py       # Procedure execution engine
-│       ├── ml_engine.py       # Neuro-Symbolic + Bayesian ML
-│       ├── information_gain.py # Shannon Entropy / EIG
-│       ├── malrules.py        # Procedural bug definitions (DSL)
-│       └── synthesis.py       # Question generator
-│
-├── data/
-│   └── demo_class.json        # 12-student synthetic fixture
-│
-└── scripts/
-    ├── evaluate.py            # Regression evaluation
-    └── verify_submission.sh   # Full release verification
+```mermaid
+graph TD
+    subgraph Repo["📦 Monorepo"]
+        subgraph FE2["apps/frontend — Next.js 16"]
+            P1["/ Landing + 3D Hero"]
+            P2["/demo Teacher Dashboard"]
+            P3["/judge 40s Cinematic Mode"]
+        end
+        subgraph BE["apps/api — FastAPI"]
+            R["routes/api.py"]
+            S["services/ demo · held_out · jobs"]
+        end
+        subgraph PKG["packages/faultline_core"]
+            IN["inference.py"]
+            ML2["ml_engine.py"]
+            IG2["information_gain.py"]
+            MR["malrules.py"]
+        end
+        subgraph D["data/"]
+            DJ["demo_class.json"]
+        end
+    end
+
+    subgraph Deploy["☁️ Deployment"]
+        VCL["Vercel — Frontend"]
+        SRV["Render / Docker — API"]
+    end
+
+    FE2 --> BE
+    BE --> PKG
+    PKG --> D
+    FE2 --> VCL
+    BE --> SRV
 ```
 
 ---
@@ -284,7 +332,7 @@ docker-compose up --build
 ./scripts/verify_submission.sh
 ```
 
-This single command checks:
+Checks:
 1. Python compilation and categorical source sweeps
 2. JavaScript syntax validation
 3. Sanitized generated-fixture integrity
@@ -304,7 +352,7 @@ FaultLine is honest about what it is and isn't:
 - ❌ No verified handwriting accuracy claims
 - ❌ No causal learning-improvement percentages
 - ❌ No mastery forecast or longitudinal learner model
-- ❌ No autonomous LLM diagnosis (LLM guides; math engine decides)
+- ❌ No autonomous LLM diagnosis *(LLM guides; math engine decides)*
 - ✅ Exact deterministic diagnosis on the verified fixture
 - ✅ Confidence-gated — refuses to guess when evidence is weak
 - ✅ Cryptographically provable — no retroactive answer fitting

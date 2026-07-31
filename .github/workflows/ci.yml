@@ -21,4 +21,6 @@ jobs:
         with:
           node-version: "22"
       - run: pip install -r requirements-dev.txt
+      - name: Regenerate release manifest
+        run: PYTHONPATH=packages/faultline_core:apps/api python scripts/build_manifest.py
       - run: ./scripts/verify_submission.sh

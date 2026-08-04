@@ -4,6 +4,13 @@
 
 Faultline is a narrow, competition-oriented prototype for diagnosing repeated procedures in **adding fractions with unlike denominators**. It executes candidate procedures against visible student work, reports the full posterior, refuses to name a diagnosis when evidence is weak, and selects follow-up questions by exact expected information gain.
 
+Faultline is **neuro-symbolic**: a local vision-language model transcribes handwriting into structured evidence and may propose symbolic procedure hypotheses, but a deterministic symbolic executor and an explicit Bayesian engine — never the model — decide the diagnosis. See [docs/AI_ML_PROOF.md](docs/AI_ML_PROOF.md) and [docs/architecture/neuro_symbolic_bayesian_architecture.md](docs/architecture/neuro_symbolic_bayesian_architecture.md).
+
+## Runtime modes
+
+- `FAULTLINE_RUNTIME_MODE=fixture` (default) — deterministic, clearly-synthetic fixture; no model required. This is what the public deployment runs.
+- `FAULTLINE_RUNTIME_MODE=local_ai` — a real local vision model (via [Ollama](https://ollama.com), default `qwen3-vl:4b`) transcribes the uploaded worksheet and the deterministic Bayesian engine diagnoses it. No hosted API key is used or accepted. There is **no silent fixture fallback**: a missing model or timeout returns a clear error or abstention.
+
 ## What the verified build does
 
 - Serves a zero-build HTML/CSS/JavaScript teacher interface from FastAPI.
@@ -35,6 +42,23 @@ Open:
 - OpenAPI schema: `http://localhost:8000/openapi.json`
 
 Interactive Swagger/ReDoc pages are disabled in the hardened demo runtime. The OpenAPI JSON remains available.
+
+## Run with a local model (optional)
+
+```bash
+# Terminal 1
+ollama serve
+# Terminal 2
+ollama pull qwen3-vl:4b
+export FAULTLINE_RUNTIME_MODE=local_ai
+export FAULTLINE_PROOF_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+./scripts/setup_local_ai.sh    # verifies server, model, and structured output
+./start.sh
+```
+
+Model health is reported at `GET /v1/models/health`; the active mode at `GET /v1/runtime`. Fixture mode remains available at any time with `FAULTLINE_RUNTIME_MODE=fixture ./start.sh`.
+
+The public/fixture deployment does **not** perform live OCR; only `local_ai` mode invokes a model.
 
 ## Verify the release
 
@@ -178,9 +202,13 @@ planning/               original winning blueprint; some files describe future-s
 scripts/                generation, evaluation, smoke, and release verification
 ```
 
-## Optional provider boundaries
+## Local neural provider
 
-The repository retains bounded interfaces for a future transcription model and a future JSON-rule proposal model. They are intentionally disabled until a concrete model contract is selected and tested. Neither provider is part of the verified runtime, and neither may directly name a diagnosis.
+In `local_ai` mode the transcription and hypothesis-proposal roles are served by a local Ollama model (default `qwen3-vl:4b`, configurable). The model transcribes visible work into strictly schema-validated evidence and may propose symbolic DSL hypotheses; it never names a diagnosis, returns a posterior, or runs code. Every proposal is adjudicated by the deterministic verifier before it can influence inference. See [docs/architecture/privacy_boundary.md](docs/architecture/privacy_boundary.md) and [docs/evaluation/MODEL_CARD.md](docs/evaluation/MODEL_CARD.md).
+
+## Evaluation
+
+Layered and reproducible — see [docs/evaluation/EVALUATION_CARD.md](docs/evaluation/EVALUATION_CARD.md). Deterministic Bayesian metrics use the labelled **synthetic** fixture; transcription is evaluated on a licensed public symbol subset (HASYv2, ODbL); end-to-end image→procedure accuracy is **not** claimed (no public procedure labels exist).
 
 ## Deliberate non-claims
 

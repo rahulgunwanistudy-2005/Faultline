@@ -11,6 +11,13 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "MANIFEST.json"
 SKIP_PARTS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "node_modules", "dist", "build", ".next"}
 SKIP_NAMES = {"MANIFEST.json", ".DS_Store"}
+# Excluded from the manifest because they are excluded from the release ZIP:
+# - results/ are generated, timestamped evaluation artifacts;
+# - the licensed HASYv2 images are re-fetchable and kept out of the ZIP (ODbL).
+SKIP_PREFIXES = (
+    "data/evaluation/results/",
+    "data/evaluation/public_handwriting_subset/images/",
+)
 
 
 def payload() -> dict:
@@ -19,6 +26,8 @@ def payload() -> dict:
         if not path.is_file() or SKIP_PARTS.intersection(path.parts) or path.name in SKIP_NAMES:
             continue
         relative = path.relative_to(ROOT).as_posix()
+        if relative.startswith(SKIP_PREFIXES):
+            continue
         content = path.read_bytes()
         files.append(
             {

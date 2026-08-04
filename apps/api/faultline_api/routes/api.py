@@ -6,9 +6,11 @@ from fastapi import APIRouter, HTTPException, Request
 
 from ..config import get_settings
 from ..schemas import ProofRevealPayload, ReadingCorrection, TemplateId
+from ..services.background_jobs import run_local_ai_pipeline
 from ..services.demo import build_class_analysis, get_student
 from ..services.held_out import ProofTokenError, create_prediction, reveal_prediction
-from ..services.jobs import DEMO_DISCLOSURE, STORE
+from ..services.jobs import DEMO_DISCLOSURE, LOCAL_AI_DISCLOSURE, STORE
+from ..services.model_health import model_health, runtime_summary
 from ..services.rate_limit import UPLOAD_LIMITER, WRITE_LIMITER
 from ..services.segmentation import InvalidWorksheetImage, crop_normalized_image, normalize_image
 
@@ -58,6 +60,18 @@ def health() -> dict[str, str]:
     return {"status": "ok", "service": "faultline-api", "mode": "competition-demo"}
 
 
+@router.get("/v1/runtime")
+def runtime() -> dict:
+    """Report the active runtime mode and non-secret model configuration."""
+    return runtime_summary()
+
+
+@router.get("/v1/models/health")
+async def models_health() -> dict:
+    """Report local-model availability (probes Ollama only in local_ai mode)."""
+    return await model_health()
+
+
 @router.get("/v1/demo/classes/{class_id}")
 def demo_class(class_id: str) -> dict:
     if class_id != "period-3":
@@ -89,6 +103,24 @@ async def create_analysis(
         "bytes_received": len(content),
         "stored": False,
     }
+
+    if get_settings().is_local_ai:
+        job = STORE.create_local_ai(filename, template_id, metadata)
+        # Synchronous within the request for this single-worker demo: the job
+        # traverses real pipeline stages (recorded in state_history), never a
+        # time-based simulation, and there is no fixture fallback on failure.
+        region_crops = [(crop.region_id, crop.image_bytes) for crop in crops]
+        await run_local_ai_pipeline(job, region_crops)
+        snapshot = job.snapshot()
+        return {
+            "analysis_id": job.id,
+            "status": snapshot["status"],
+            "progress": snapshot["progress"],
+            "mode": snapshot["mode"],
+            "disclosure": LOCAL_AI_DISCLOSURE,
+            "upload": metadata,
+        }
+
     job = STORE.create(filename, template_id, metadata)
     snapshot = job.snapshot()
     return {

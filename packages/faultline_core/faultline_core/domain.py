@@ -60,6 +60,30 @@ class Observation:
         return cls(problem, (AnswerCandidate(value, confidence),), frozenset(step_features))
 
 
+PROBLEM_PATTERN = re.compile(
+    r"^\s*(\d{1,4})\s*/\s*(\d{1,4})\s*\+\s*(\d{1,4})\s*/\s*(\d{1,4})\s*$"
+)
+
+
+def parse_problem(expression: str, problem_id: str = "p1") -> FractionProblem | None:
+    """Parse a printed ``a/b + c/d`` expression into a problem, as written.
+
+    Numerators/denominators are kept unreduced because the diagnosed procedures
+    depend on the literal digits (e.g. ``add_across`` uses ``d1 + d2``). Returns
+    ``None`` when the text is not a well-formed unlike/like-denominator sum.
+    """
+    match = PROBLEM_PATTERN.fullmatch(expression or "")
+    if not match:
+        return None
+    n1, d1, n2, d2 = (int(group) for group in match.groups())
+    if d1 <= 0 or d2 <= 0:
+        return None
+    try:
+        return FractionProblem(problem_id, n1, d1, n2, d2)
+    except ValueError:
+        return None
+
+
 FRACTION_PATTERN = re.compile(r"^[+-]?\d+(?:/[+-]?\d+)?$")
 
 

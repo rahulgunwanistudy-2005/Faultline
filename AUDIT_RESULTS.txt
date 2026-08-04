@@ -1,15 +1,24 @@
-Faultline v0.2.0 — Audit Outcome
-================================
+Faultline v0.3.0 — audit results summary
+=========================================
+See PROJECT_QUALITY_AUDIT.md for the full red-team table and evidence.
 
-Verdict: submission-ready as a hardened synthetic competition prototype; not production-ready for real student data.
+Tests:            146 passed (54 core, 81 API, 11 top-level)
+Verify gates:     12/12 (compile+audit, JS, freeze, assets, tests, deps,
+                  fixture eval, Bayesian+proposal eval, dataset checksums,
+                  smoke test, optional local-AI smoke, manifest)
+Frontend freeze:  6 files, byte-for-byte unchanged (FRONTEND_MANIFEST.json)
+Surface audit:    clean (no eval/exec, silent except, personal paths,
+                  disabled TLS, pickle, shell injection)
 
-Issues corrected
-- 3 critical dependency/proof-integrity issues
-- 6 major API, upload, state, validation, and rate-limit issues
-- 6 medium architecture, deployment, UI, and claim-drift issues
-- 3 minor integrity/accessibility/release issues
+Neuro-symbolic:   local vision transcription + bounded DSL proposals; model has
+                  no diagnostic authority; verifier-gated novelty.
+Bayesian engine:  explicit priors x likelihood, reading marginalization,
+                  log-sum-exp, entropy/margin, abstention; deterministic.
+Dataset:          HASYv2 subset, ODbL, 28 images, MD5 verified, no PII.
 
-Most important correction
-The original browser/API fixture already contained the held-out answer and prediction. The corrected build removes both from public payloads and assets, creates the prediction on the server, signs it with an expiring HMAC token, and requires that token for a separate reveal.
+Red-team:         18/18 attack questions blocked or bounded (see quality audit).
+Git:              all changes unstaged; no commits/branches/tags by assistant.
 
-See PROJECT_QUALITY_AUDIT.md for the complete issue registry, verification cycles, and remaining human/research gates.
+NOT claimed:      perfect score, perfect handwriting recognition, classroom
+                  accuracy, learning-impact, production readiness for
+                  identifiable student data, model nominations == posterior.

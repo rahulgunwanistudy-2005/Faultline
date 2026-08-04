@@ -17,6 +17,31 @@ DEMO_DISCLOSURE = (
     "clearly labeled synthetic regression fixture."
 )
 
+LOCAL_AI_DISCLOSURE = (
+    "This worksheet was transcribed by a local vision model and diagnosed by the "
+    "deterministic Bayesian engine. No hosted API was used and no image bytes were stored."
+)
+
+# Real pipeline stages, in order. Progress is derived from the stage reached,
+# never from elapsed time.
+LOCAL_AI_STAGES = (
+    "validating",
+    "segmenting",
+    "transcribing",
+    "generating_hypotheses",
+    "bayesian_inference",
+    "complete",
+)
+_STAGE_PROGRESS = {
+    "validating": 8,
+    "segmenting": 20,
+    "transcribing": 55,
+    "generating_hypotheses": 78,
+    "bayesian_inference": 92,
+    "complete": 100,
+    "failed": 100,
+}
+
 
 @dataclass
 class AnalysisJob:
@@ -24,13 +49,33 @@ class AnalysisJob:
     filename: str
     template_id: str
     upload_metadata: dict[str, Any]
+    kind: str = "fixture"  # fixture | local_ai
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     created_monotonic: float = field(default_factory=monotonic)
-    result: dict[str, Any] = field(default_factory=build_class_analysis)
+    result: dict[str, Any] | None = None
     corrections: dict[str, dict[str, Any]] = field(default_factory=dict)
     force_complete: bool = False
+    # local_ai only
+    state: str = "validating"
+    state_history: list[str] = field(default_factory=list)
+    error: str | None = None
+    private_data: dict[str, Any] = field(default_factory=dict)
+
+    def advance(self, state: str) -> None:
+        self.state = state
+        self.state_history.append(state)
+
+    def fail(self, message: str) -> None:
+        self.state = "failed"
+        self.state_history.append("failed")
+        self.error = message
 
     def snapshot(self) -> dict[str, Any]:
+        if self.kind == "local_ai":
+            return self._local_ai_snapshot()
+        return self._fixture_snapshot()
+
+    def _fixture_snapshot(self) -> dict[str, Any]:
         elapsed_ms = (monotonic() - self.created_monotonic) * 1000
         stage_ms = get_settings().demo_stage_ms
         if self.force_complete or elapsed_ms >= stage_ms * 3:
@@ -58,6 +103,32 @@ class AnalysisJob:
             payload["result"]["analysis_mode"] = "synthetic_demo_fixture"
             payload["result"]["disclosure"] = DEMO_DISCLOSURE
             payload["result"]["upload"] = deepcopy(self.upload_metadata)
+        return payload
+
+    def _local_ai_snapshot(self) -> dict[str, Any]:
+        status = self.state
+        payload: dict[str, Any] = {
+            "id": self.id,
+            "filename": self.filename,
+            "template_id": self.template_id,
+            "status": status,
+            "progress": _STAGE_PROGRESS.get(status, 0),
+            "created_at": self.created_at,
+            "mode": "local_ai",
+            "disclosure": LOCAL_AI_DISCLOSURE,
+            "upload": deepcopy(self.upload_metadata),
+            "stages": list(self.state_history),
+            "result": None,
+        }
+        if status == "failed":
+            payload["error"] = self.error or "The local-AI pipeline failed."
+        if status == "complete" and self.result is not None:
+            result = deepcopy(self.result)
+            result.pop("_private", None)  # never expose held-out answers
+            result["analysis_mode"] = "local_ai"
+            result["disclosure"] = LOCAL_AI_DISCLOSURE
+            result["upload"] = deepcopy(self.upload_metadata)
+            payload["result"] = result
         return payload
 
 
@@ -88,6 +159,28 @@ class JobStore:
             filename=filename,
             template_id=template_id,
             upload_metadata=upload_metadata,
+            kind="fixture",
+            result=build_class_analysis(),
+        )
+        with self._lock:
+            self._cleanup()
+            self._jobs[job.id] = job
+        return job
+
+    def create_local_ai(
+        self,
+        filename: str,
+        template_id: str,
+        upload_metadata: dict[str, Any],
+    ) -> AnalysisJob:
+        job = AnalysisJob(
+            id=str(uuid4()),
+            filename=filename,
+            template_id=template_id,
+            upload_metadata=upload_metadata,
+            kind="local_ai",
+            state="validating",
+            state_history=["validating", "segmenting"],
         )
         with self._lock:
             self._cleanup()
@@ -105,6 +198,8 @@ class JobStore:
             job = self._jobs.get(job_id)
             if job is None:
                 return None
+            if job.kind != "fixture" or job.result is None:
+                raise KeyError(reading_id)
             valid_readings = {
                 observation["reading_id"]
                 for student in job.result["students"]

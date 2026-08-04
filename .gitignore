@@ -15,3 +15,6 @@ build/
 *.egg-info/
 .DS_Store
 *.log
+
+# Generated, timestamped evaluation artifacts (reproducible via scripts/)
+data/evaluation/results/

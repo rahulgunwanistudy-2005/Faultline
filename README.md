@@ -19,7 +19,7 @@
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-frontend--seven--mu--58.vercel.app-E07A5F?style=for-the-badge)](https://frontend-seven-mu-58.vercel.app)
 [![Judge Mode](https://img.shields.io/badge/🎬_Judge_Mode-40s_Cinematic-cc5533?style=for-the-badge)](https://frontend-seven-mu-58.vercel.app/judge)
-[![Tests](https://img.shields.io/badge/Tests-33_passing-2d6a4f?style=for-the-badge)](#verification)
+[![Tests](https://img.shields.io/badge/Tests-146_passing-2d6a4f?style=for-the-badge)](#verification)
 [![License](https://img.shields.io/badge/License-MIT-3d405b?style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -393,7 +393,7 @@ PYTHONPATH=packages/faultline_core:apps/api python scripts/evaluate.py
 | Deliberate withheld diagnoses | **1 / 12** | Ambiguity correctly detected |
 | Held-out answer leakage | **0** | Blocked by integration tests |
 | Token tampering blocked | **✅** | Cross-student reuse rejected |
-| Full test suite | **33 / 33** | All passing |
+| Full test suite | **146 / 146** | All passing |
 
 <br/>
 
@@ -447,7 +447,7 @@ Faultline/
 │   ├── build_manifest.py           # Deterministic release manifest
 │   ├── evaluate.py                 # Regression evaluation runner
 │   ├── audit_surface.py            # Static source sweep
-│   └── verify_submission.sh        # Full 8-gate release verification
+│   └── verify_submission.sh        # Full 12-gate release verification
 │
 ├── .github/workflows/ci.yml        # GitHub Actions CI
 ├── Dockerfile                      # Production container
@@ -564,8 +564,8 @@ Verifies the token and reveals the separately stored held-out answer.
 | **Auth / Proof** | HMAC-SHA256 | Signed, expiring, student-bound tokens |
 | **Deployment (FE)** | Vercel | Edge CDN, zero-config |
 | **Deployment (API)** | Docker, Render, `render.yaml` | One-click production |
-| **CI** | GitHub Actions | 8-gate release verification |
-| **Testing** | pytest | 33 deterministic tests |
+| **CI** | GitHub Actions | 12-gate release verification |
+| **Testing** | pytest | 146 deterministic tests |
 
 <br/>
 
@@ -607,6 +607,13 @@ FAULTLINE_PROOF_SECRET=$(python -c "import secrets; print(secrets.token_urlsafe(
 
 # Optional: whitelist your frontend origin
 FAULTLINE_CORS_ORIGINS=https://frontend-seven-mu-58.vercel.app
+
+# Runtime mode: fixture (default, deterministic, no model) or local_ai
+FAULTLINE_RUNTIME_MODE=fixture
+# Local model configuration (only used in local_ai mode; no hosted API key)
+FAULTLINE_VISION_MODEL=qwen3-vl:4b
+FAULTLINE_HYPOTHESIS_MODEL=qwen3-vl:4b
+FAULTLINE_OLLAMA_BASE_URL=http://127.0.0.1:11434
 ```
 
 ### Docker
@@ -622,7 +629,45 @@ docker-compose up --build
 ./scripts/verify_submission.sh
 ```
 
-This runs 8 deterministic gates: Python compilation, JS syntax, fixture integrity, 33 unit tests, dependency closure, evaluation snapshot, live smoke test, and release manifest.
+This runs the deterministic read-only gates: Python compilation and source sweeps, JS syntax, frontend-freeze verification, generated-asset integrity, the full test suite (**146 passing**), dependency closure, fixture + Bayesian + neuro-symbolic evaluation, dataset provenance/checksums, live smoke test, and release manifest.
+
+<br/>
+
+---
+
+<br/>
+
+## 🧩 Local AI Runtime (v0.3)
+
+> **Architecture in one sentence:** the local neural model structures evidence and proposes bounded symbolic hypotheses; a deterministic verifier filters candidates, and the Bayesian engine computes the posterior, uncertainty, abstention, and next-best diagnostic question.
+
+Faultline runs in two explicit modes — there is **no silent fixture fallback**:
+
+| Mode | Behaviour |
+|---|---|
+| `fixture` (default) | Deterministic, clearly-synthetic fixture. No model required. What the public deployment runs. |
+| `local_ai` | A real local vision model (via [Ollama](https://ollama.com)) transcribes the uploaded worksheet into strictly schema-validated evidence, may propose restricted-DSL hypotheses, and the deterministic Bayesian engine diagnoses it. No hosted API key is used or accepted. |
+
+### Run with a local model
+
+```bash
+# Terminal 1
+ollama serve
+# Terminal 2
+ollama pull qwen3-vl:4b
+export FAULTLINE_RUNTIME_MODE=local_ai
+export FAULTLINE_PROOF_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+./scripts/setup_local_ai.sh    # verifies server, model, and structured output
+./start.sh
+```
+
+Runtime mode is reported at `GET /v1/runtime`; local-model availability at `GET /v1/models/health`. Configure models with `FAULTLINE_VISION_MODEL` / `FAULTLINE_HYPOTHESIS_MODEL`. The public/fixture deployment does **not** perform live OCR — only `local_ai` mode invokes a model.
+
+**What the local model may and may not do.** It transcribes visible work, extracts approved step features, returns reading alternatives, nominates known hypothesis ids, and proposes up to three symbolic DSL programs. It **never** names a diagnosis, returns a posterior, scores a trait, or runs code — there is no schema field for any of these. Reading uncertainty is marginalized, and the engine abstains (with explicit reasons and the evidence it needs) rather than guessing.
+
+**Layered, reproducible evaluation** — see [`docs/evaluation/EVALUATION_CARD.md`](docs/evaluation/EVALUATION_CARD.md) and [`docs/evaluation/MODEL_CARD.md`](docs/evaluation/MODEL_CARD.md). Deterministic Bayesian metrics use the labelled **synthetic** fixture; transcription is evaluated on a licensed public symbol subset (HASYv2, ODbL — provenance in `data/evaluation/public_handwriting_subset/`); end-to-end image→procedure accuracy is **not** claimed (no labelled public set exists). Full proof of what the AI does and does not do: [`docs/AI_ML_PROOF.md`](docs/AI_ML_PROOF.md).
+
+> **Known local-model limitation.** The configured Qwen model may emit structured content through its *thinking* channel rather than its response channel. Until that compatibility is corrected and tested, the optional local-model structured-output smoke test remains unresolved. This does not affect fixture mode or any deterministic gate.
 
 <br/>
 

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "note": "Frozen competition frontend. Verified byte-for-byte by scripts/check_frontend_freeze.py.",
+  "root": "apps/web-static",
+  "file_count": 6,
+  "files": [
+    {
+      "path": "apps/web-static/assets/app.js",
+      "bytes": 22552,
+      "sha256": "0e0c54222e5a326c9bf2b8dc0da0c9da8fbf437e908e16b720820480412d559f"
+    },
+    {
+      "path": "apps/web-static/assets/demo-class.js",
+      "bytes": 68644,
+      "sha256": "4067206cef431f9338c7a307e13ae16ca9dff630324f1701f3d0ae039b5c40b4"
+    },
+    {
+      "path": "apps/web-static/assets/judge.js",
+      "bytes": 9914,
+      "sha256": "af70b7eb5f47b2200a961483cff7099669b3210dd0b9bd4b9132eb520bb4c4d2"
+    },
+    {
+      "path": "apps/web-static/assets/styles.css",
+      "bytes": 41733,
+      "sha256": "d52d5792c7f60f4ebe3f6e8c671ffa98e138ce29fcb4aacad200e8b9913876b7"
+    },
+    {
+      "path": "apps/web-static/index.html",
+      "bytes": 1585,
+      "sha256": "bb65c971570e9437509758961debd0bbf18c925d2e2463796b067a49559dab03"
+    },
+    {
+      "path": "apps/web-static/judge.html",
+      "bytes": 774,
+      "sha256": "621fed16990ae9769b59fb5864ebbcf3041cc2137a05025d7ff1fb19ad6107aa"
+    }
+  ]
+}

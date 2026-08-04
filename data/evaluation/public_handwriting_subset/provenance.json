@@ -1,0 +1,160 @@
+{
+  "dataset_name": "HASYv2",
+  "version": "v2",
+  "source_url": "https://zenodo.org/records/259444/files/HASYv2.tar.bz2?download=1",
+  "doi": "10.5281/zenodo.259444",
+  "license": "ODC Open Database License v1.0 (ODbL)",
+  "attribution": "HASYv2 dataset, Martin Thoma (2017), DOI:10.5281/zenodo.259444",
+  "attribution_required": true,
+  "redistribution": "permitted with attribution + share-alike (ODbL); excluded from the public release ZIP to avoid mis-licensing",
+  "retrieval_date": "2026-07-31",
+  "archive_md5": "fddf23f36e24b5236f6b3a0880c778e3",
+  "selection_criteria": "first 4 instances of each fraction-relevant symbol class ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '=', '/'], capped at 28 images, deterministic order",
+  "image_count": 28,
+  "contains_real_student_information": false,
+  "pii_note": "Only a pseudonymous integer user_id is present; no names, faces, or school identifiers.",
+  "usable_for_transcription": true,
+  "usable_for_end_to_end_diagnosis": false,
+  "images": [
+    {
+      "sample_id": "hasy_000",
+      "sha256": "7296e5d62e1884693d5f599cf00ef21f000ab9363d2efb2a02e916ce3e103891",
+      "expected_symbol": "0"
+    },
+    {
+      "sample_id": "hasy_001",
+      "sha256": "14b1c94bb1e26e4404d6063c82627365ee2a38ff36cfd9048246fc050b87739c",
+      "expected_symbol": "0"
+    },
+    {
+      "sample_id": "hasy_002",
+      "sha256": "41ae20c0e40ddbff21a9ca2ee71dd17d2e59215952722a4ca6c75ef47df9f774",
+      "expected_symbol": "0"
+    },
+    {
+      "sample_id": "hasy_003",
+      "sha256": "4493e301e8f02eaa830713831a027b36c52acee9d5374005f2b6fd4427349de0",
+      "expected_symbol": "0"
+    },
+    {
+      "sample_id": "hasy_004",
+      "sha256": "30b0a165107e10797a6935f0e384c3853291163202a11aa35cc88bb4e0024a59",
+      "expected_symbol": "1"
+    },
+    {
+      "sample_id": "hasy_005",
+      "sha256": "289020d919eb692dd4598e6f37d9ce7d213e1ba0efccc0cc42690a1b644e1004",
+      "expected_symbol": "1"
+    },
+    {
+      "sample_id": "hasy_006",
+      "sha256": "688e4b58c7ff2e93029dddc7b88906ca341693ba58d86f0c89254c5646a79558",
+      "expected_symbol": "1"
+    },
+    {
+      "sample_id": "hasy_007",
+      "sha256": "0bb396b6e7027297c0565b9dea79d51e4a7b9fa677cf2208f60b63b7038d8604",
+      "expected_symbol": "1"
+    },
+    {
+      "sample_id": "hasy_008",
+      "sha256": "2faf9f52a97879ecccd0e3f41a139f2efa92b726e507d100fbb33274b41f681c",
+      "expected_symbol": "2"
+    },
+    {
+      "sample_id": "hasy_009",
+      "sha256": "77fc80bf92d60a282a219a21e367c93cef4fbf62dcefb9142e25dd69b664c9e0",
+      "expected_symbol": "2"
+    },
+    {
+      "sample_id": "hasy_010",
+      "sha256": "71e2d7a2941425afa298414cda087a8d3ecaf6884c33f8fb8728d7b920ba8999",
+      "expected_symbol": "2"
+    },
+    {
+      "sample_id": "hasy_011",
+      "sha256": "3aa97e5bcb86fd02f012c8c4c1ede1b025ee564ad2b05ba481fee84e0bfc6d47",
+      "expected_symbol": "2"
+    },
+    {
+      "sample_id": "hasy_012",
+      "sha256": "8df40c4948c545728bd442004ab2ba7dbb067e5fb6f7fb21c7e25ca848f702bc",
+      "expected_symbol": "3"
+    },
+    {
+      "sample_id": "hasy_013",
+      "sha256": "6cfacf8d440925b9348fe1ce6ea8c0fdd0f21df1d25f524a0683349ee5746fb0",
+      "expected_symbol": "3"
+    },
+    {
+      "sample_id": "hasy_014",
+      "sha256": "e79e32c98cdbb2f280636033da19acca765363fe058f7bf7d8bdf243a4f09727",
+      "expected_symbol": "3"
+    },
+    {
+      "sample_id": "hasy_015",
+      "sha256": "c0195edfe980613544ea548b3354412cf2e0208a7ff2ae76e5a156410f65409d",
+      "expected_symbol": "3"
+    },
+    {
+      "sample_id": "hasy_016",
+      "sha256": "483938eb54a0e6d6856aa78cf0e1f6597a62e57c16ab7cdc1b689331537f0c12",
+      "expected_symbol": "4"
+    },
+    {
+      "sample_id": "hasy_017",
+      "sha256": "74ad38b5851e278f17a7025cb909a9fa0e3eec829e28ff1fff57ffa1e41443fa",
+      "expected_symbol": "4"
+    },
+    {
+      "sample_id": "hasy_018",
+      "sha256": "c728a92ab151b687aed4a024c68371baba5030870050d4fb371eeb3687516a0a",
+      "expected_symbol": "4"
+    },
+    {
+      "sample_id": "hasy_019",
+      "sha256": "cf222c616bd7db8384cf589f07a6715eed72b36f598f7f54a3800969a09cec95",
+      "expected_symbol": "4"
+    },
+    {
+      "sample_id": "hasy_020",
+      "sha256": "a53b6c4ff9093c4661b2946e8a62df513973321f1829af42b56770903d1f136f",
+      "expected_symbol": "5"
+    },
+    {
+      "sample_id": "hasy_021",
+      "sha256": "48622ff725d315dac6236fe0e1868c605428716bc11b3779145f5948cce16947",
+      "expected_symbol": "5"
+    },
+    {
+      "sample_id": "hasy_022",
+      "sha256": "17efca15e045477da113088b1342b82e84d25642b5e1e3aaa1becaae070794b8",
+      "expected_symbol": "5"
+    },
+    {
+      "sample_id": "hasy_023",
+      "sha256": "9011c6479857d4ce658be9747b0f7df809875f1cdf4ae3cab1411a10517b01e3",
+      "expected_symbol": "5"
+    },
+    {
+      "sample_id": "hasy_024",
+      "sha256": "c23ffdee7f4ea413cbfcc18b3f81161af45850c24bf2425a2220eefbadbd8eb7",
+      "expected_symbol": "6"
+    },
+    {
+      "sample_id": "hasy_025",
+      "sha256": "0598a178364d47aafac250cb5a7b655da3a2b5b4d369e28485bf8b5028fa61f9",
+      "expected_symbol": "6"
+    },
+    {
+      "sample_id": "hasy_026",
+      "sha256": "1b990f34e1fc9a2321b79304dac957ab32367a7ca746a27cf2e24e1e33f7d718",
+      "expected_symbol": "6"
+    },
+    {
+      "sample_id": "hasy_027",
+      "sha256": "26312082eee51856039349a3db298b6f13f78be04c39345c1e3a4f5770512569",
+      "expected_symbol": "6"
+    }
+  ]
+}

@@ -9,14 +9,68 @@ import time
 from typing import Any
 from uuid import uuid4
 
+from dataclasses import dataclass
+
 from faultline_core import HYPOTHESIS_MAP
 
 from ..config import get_settings
 from .demo import get_student_private
+from .jobs import STORE
 
 
 class ProofTokenError(ValueError):
     pass
+
+
+@dataclass(frozen=True)
+class HeldOutContext:
+    """Normalized held-out prediction context, from the demo fixture or an upload job."""
+
+    available: bool
+    state: str
+    problem: dict | None = None
+    hypothesis_id: str | None = None
+    predicted_answer: str | None = None
+    actual_answer: str | None = None
+    ocr_confidence: int | None = None
+
+
+def _resolve_context(student_id: str) -> HeldOutContext | None:
+    demo_student = get_student_private(student_id)
+    if demo_student is not None:
+        diagnosis = demo_student["diagnosis"]
+        held_out = demo_student["held_out"]
+        hypothesis_id = diagnosis["hypothesis_id"]
+        available = diagnosis["state"] == "named_diagnosis" and hypothesis_id in HYPOTHESIS_MAP
+        if not available:
+            return HeldOutContext(False, diagnosis["state"])
+        problem = held_out["problem"]
+        predicted = str(HYPOTHESIS_MAP[hypothesis_id].predict(_problem_from_payload(problem)))
+        return HeldOutContext(
+            available=True,
+            state=diagnosis["state"],
+            problem=problem,
+            hypothesis_id=hypothesis_id,
+            predicted_answer=predicted,
+            actual_answer=held_out["actual_answer"],
+            ocr_confidence=held_out["ocr_confidence"],
+        )
+
+    job = STORE.get(student_id)
+    if job is not None and job.kind == "local_ai":
+        private = job.private_data.get(student_id)
+        if private is None:
+            return HeldOutContext(False, "withheld")
+        return HeldOutContext(
+            available=True,
+            state="named_diagnosis",
+            problem=private["problem"],
+            hypothesis_id=private["hypothesis_id"],
+            predicted_answer=private["predicted_answer"],
+            actual_answer=private["actual_answer"],
+            ocr_confidence=private["ocr_confidence"],
+        )
+    return None
 
 
 def _encode(value: bytes) -> str:
@@ -37,24 +91,22 @@ def _sign(payload: bytes) -> str:
 
 
 def create_prediction(student_id: str) -> dict[str, Any] | None:
-    student = get_student_private(student_id)
-    if student is None:
+    context = _resolve_context(student_id)
+    if context is None:
         return None
-    hypothesis_id = student["diagnosis"]["hypothesis_id"]
-    if student["diagnosis"]["state"] != "named_diagnosis" or hypothesis_id not in HYPOTHESIS_MAP:
+    if not context.available:
         return {
             "student_id": student_id,
             "state": "withheld",
             "reason": "The evidence is not strong enough for a held-out prediction.",
         }
 
-    problem = student["held_out"]["problem"]
-    predicted_answer = str(HYPOTHESIS_MAP[hypothesis_id].predict(_problem_from_payload(problem)))
+    problem = context.problem
     claims = {
         "student_id": student_id,
         "problem_id": problem["id"],
-        "hypothesis_id": hypothesis_id,
-        "predicted_answer": predicted_answer,
+        "hypothesis_id": context.hypothesis_id,
+        "predicted_answer": context.predicted_answer,
         "issued_at": int(time.time()),
         "nonce": str(uuid4()),
     }
@@ -65,23 +117,25 @@ def create_prediction(student_id: str) -> dict[str, Any] | None:
         "state": "locked",
         "problem_id": problem["id"],
         "expression": problem["expression"],
-        "hypothesis_id": hypothesis_id,
-        "predicted_answer": predicted_answer,
+        "hypothesis_id": context.hypothesis_id,
+        "predicted_answer": context.predicted_answer,
         "proof_token": proof_token,
         "expires_in_seconds": get_settings().proof_ttl_seconds,
     }
 
 
 def reveal_prediction(student_id: str, proof_token: str) -> dict[str, Any] | None:
-    student = get_student_private(student_id)
-    if student is None:
+    context = _resolve_context(student_id)
+    if context is None:
         return None
     claims = _verify_token(proof_token)
     if claims.get("student_id") != student_id:
         raise ProofTokenError("proof token does not belong to this student")
-    if claims.get("problem_id") != student["held_out"]["problem"]["id"]:
+    if not context.available or context.problem is None:
+        raise ProofTokenError("no held-out prediction is available for this student")
+    if claims.get("problem_id") != context.problem["id"]:
         raise ProofTokenError("proof token is for a different problem")
-    actual = student["held_out"]["actual_answer"]
+    actual = context.actual_answer
     return {
         "student_id": student_id,
         "state": "revealed",
@@ -90,7 +144,7 @@ def reveal_prediction(student_id: str, proof_token: str) -> dict[str, Any] | Non
         "predicted_answer": claims["predicted_answer"],
         "actual_answer": actual,
         "matched": claims["predicted_answer"] == actual,
-        "ocr_confidence": student["held_out"]["ocr_confidence"],
+        "ocr_confidence": context.ocr_confidence,
     }
 
 
